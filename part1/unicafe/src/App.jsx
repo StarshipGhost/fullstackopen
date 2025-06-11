@@ -44,7 +44,9 @@ const App = () => {
 
   const StatisticLine = ({ text, value }) => {
     return (
-      <div>{text} {value}</div>
+      <tr>
+        <td>{text}</td> <td>{value}</td>
+      </tr>
     );
   };
 
@@ -60,7 +62,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <table>
       <Header text="give feedback" />
       <Button />
       <StatisticsHeader text="statistics" />
@@ -70,7 +72,7 @@ const App = () => {
       <StatisticLine text="all" value={total} />
       <StatisticLine text="avarage" value={(good - bad) / total} />
       <StatisticLine text="positive" value={(good / total) * 100} />
-    </div>
+    </table>
   );
 };
 
