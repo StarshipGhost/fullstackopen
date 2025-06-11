@@ -18,46 +18,58 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const Statistics = () => {
-    const total = good + neutral + bad;
-    const average = (good - bad) / total;
-    const positive = (good / total) * 100;
+  const total = good + neutral + bad;
 
-    if (total === 0) {
-      return <div>No feedback given</div>;
-    }
+  const Button = () => {
+    const handleGoodClick = () => {
+      setGood(good + 1);
+    };
+
+    const handleNeutralClick = () => {
+      setNeutral(neutral + 1);
+    };
+
+    const handleBadClick = () => {
+      setBad(bad + 1);
+    };
 
     return (
       <div>
-        <div>good {good}</div>
-        <div>neutral {neutral}</div>
-        <div>bad {bad}</div>
-        <div>average {average}</div>
-        <div>positive {positive} %</div>
+        <button onClick={handleGoodClick}>good</button>
+        <button onClick={handleNeutralClick}>neutral</button>
+        <button onClick={handleBadClick}>bad</button>
       </div>
     );
   };
 
-  const handleGoodClick = () => {
-    setGood(good + 1);
+  const StatisticLine = ({ text, value }) => {
+    return (
+      <div>{text} {value}</div>
+    );
   };
 
-  const handleNeutralClick = () => {
-    setNeutral(neutral + 1);
-  };
-
-  const handleBadClick = () => {
-    setBad(bad + 1);
-  };
+  if (total === 0) {
+    return (
+      <div>
+        <Header text="give feedback" />
+        <Button />
+        <StatisticsHeader text="statistics" />
+        <div>no feedback given</div>
+      </div>
+    );
+  }
 
   return (
     <div>
       <Header text="give feedback" />
-      <Button onClick={handleGoodClick} text="good" />
-      <Button onClick={handleNeutralClick} text="neutral" />
-      <Button onClick={handleBadClick} text="bad" />
+      <Button />
       <StatisticsHeader text="statistics" />
-      <Statistics />
+      <StatisticLine text="good" value={good} />
+      <StatisticLine text="neutral" value={neutral} />
+      <StatisticLine text="bad" value={bad} />
+      <StatisticLine text="all" value={total} />
+      <StatisticLine text="avarage" value={(good - bad) / total} />
+      <StatisticLine text="positive" value={(good / total) * 100} />
     </div>
   );
 };
