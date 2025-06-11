@@ -8,43 +8,8 @@ const Button = (props) => {
   return <button onClick={props.onClick}>{props.text}</button>;
 };
 
-const Grades = (props) => {
-  const grades = props.grades;
-
-  return grades.map(({ grade, count }) => (
-    <div key={grade}>
-      {grade} {count}
-    </div>
-  ));
-};
-
-const Total = (props) => {
-  return (
-    <div>
-      all {props.grades.map(({ count }) => count).reduce((a, b) => a + b)}
-    </div>
-  );
-};
-
-const Average = (props) => {
-  const grades = props.grades;
-  const total = grades.map(({ count }) => count).reduce((a, b) => a + b);
-  return (
-    <div>
-      average{" "}
-      {grades.map(({ count, value }) => count * value).reduce((a, b) => a + b) /
-        total}
-    </div>
-  );
-};
-
-
-const Positive = (props) => {
-  const grades = props.grades;
-  const goodGradeCount = grades[0].count;
-  const total = grades.map(({ count }) => count).reduce((a, b) => a + b);
-
-  return <div>positive {(goodGradeCount / total) * 100} %</div>;
+const StatisticsHeader = ({ text }) => {
+  return <h1>{text}</h1>;
 };
 
 const App = () => {
@@ -53,49 +18,42 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const header = "give feedback";
-  const grades = [
-    {
-      grade: "good",
-      count: good,
-      value: 1,
-    },
-    {
-      grade: "neutral",
-      count: neutral,
-      value: 0,
-    },
-    {
-      grade: "bad",
-      count: bad,
-      value: -1,
-    },
-  ];
+  const Statistics = () => {
+    const total = good + neutral + bad;
+    const average = (good - bad) / total;
+    const positive = (good / total) * 100;
 
-  const HandleGoodClick = () => {
+    return (
+      <div>
+        <div>good {good}</div>
+        <div>neutral {neutral}</div>
+        <div>bad {bad}</div>
+        <div>average {average}</div>
+        <div>positive {positive} %</div>
+      </div>
+    );
+  };
+
+  const handleGoodClick = () => {
     setGood(good + 1);
   };
 
-  const HandleNeutralClick = () => {
+  const handleNeutralClick = () => {
     setNeutral(neutral + 1);
   };
 
-  const HandleBadClick = () => {
+  const handleBadClick = () => {
     setBad(bad + 1);
   };
 
   return (
     <div>
-      <Header text={header} />
-      <Button onClick={HandleGoodClick} text="good" />
-      <Button onClick={HandleNeutralClick} text="neutral" />
-      <Button onClick={HandleBadClick} text="bad" />
-      <br />
-      <br />
-      <Grades grades={grades} />
-      <Total grades={grades} />
-      <Average grades={grades} />
-      <Positive grades={grades} />
+      <Header text="give feedback" />
+      <Button onClick={handleGoodClick} text="good" />
+      <Button onClick={handleNeutralClick} text="neutral" />
+      <Button onClick={handleBadClick} text="bad" />
+      <StatisticsHeader text="statistics" />
+      <Statistics />
     </div>
   );
 };
