@@ -5,11 +5,15 @@ const App = () => {
   const [newName, setNewName] = useState("");
 
   const addPerson = (event) => {
+    if (!persons.map(({ name }) => name).includes(newName)) {
+      const newPerson = {
+        name: newName,
+      };
+      setPersons(persons.concat(newPerson));
+    } else {
+      alert(`${newName} is already added to phonebook`);
+    }
     event.preventDefault();
-    const newPerson = {
-      name: newName,
-    };
-    setPersons(persons.concat(newPerson));
     setNewName("");
   };
 
