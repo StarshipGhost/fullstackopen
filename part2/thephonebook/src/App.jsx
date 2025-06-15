@@ -7,6 +7,52 @@ const initialPersons = [
   { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
 ];
 
+const Filter = ({ value, onChange }) => {
+  return (
+    <div>
+      filter shown with <input value={value} onChange={onChange} />
+    </div>
+  );
+};
+
+const PersonForm = ({
+  addPersonFunction,
+  nameValue,
+  onNameChange,
+  numberValue,
+  onNumberChange,
+}) => {
+  return (
+    <div>
+      <h2>add a new</h2>
+      <form onSubmit={addPersonFunction}>
+        <div>
+          name: <input value={nameValue} onChange={onNameChange} />
+        </div>
+        <div>
+          number: <input value={numberValue} onChange={onNumberChange} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+const Persons = ({ persons }) => {
+  return (
+    <div>
+      <h2>Numbers</h2>
+      {persons.map(({ name, number }) => (
+        <div key={name}>
+          {name} {number}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const App = () => {
   const [persons, setPersons] = useState(initialPersons);
   const [newName, setNewName] = useState("");
@@ -30,15 +76,15 @@ const App = () => {
     }
   };
 
-  const nameChange = (event) => {
+  const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
 
-  const numberChange = (event) => {
+  const handleNumberChange = (event) => {
     setNewNumber(event.target.value);
   };
 
-  const filterChange = (event) => {
+  const handleFilterChange = (event) => {
     setQuery(event.target.value);
   };
 
@@ -48,28 +94,16 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
-      <div>
-        filter shown with <input value={query} onChange={filterChange} />
-      </div>
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={nameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={numberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {filteredPersons.map(({ name, number }) => (
-        <div key={name}>
-          {name} {number}
-        </div>
-      ))}
+      <h1>Phonebook</h1>
+      <Filter value={query} onChange={handleFilterChange}></Filter>
+      <PersonForm
+        addPersonFunction={addPerson}
+        nameValue={newName}
+        onNameChange={handleNameChange}
+        numberValue={newNumber}
+        onNumberChange={handleNumberChange}
+      />
+      <Persons persons={filteredPersons} />
     </div>
   );
 };
