@@ -1,11 +1,6 @@
+import axios from "axios";
 import { useState } from "react";
-
-const initialPersons = [
-  { name: "Arto Hellas", number: "040-123456", id: 1 },
-  { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-  { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-  { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-];
+import { useEffect } from "react";
 
 const Filter = ({ value, onChange }) => {
   return (
@@ -54,7 +49,16 @@ const Persons = ({ persons }) => {
 };
 
 const App = () => {
+  const initialPersons = [];
   const [persons, setPersons] = useState(initialPersons);
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      setPersons(initialPersons.concat(response.data));
+    });
+  }, []);
+
+  console.log(initialPersons);
+
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [query, setQuery] = useState("");
@@ -62,7 +66,7 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
     if (newName.length === 0) {
-      alert(`You entered an invalid name or number`);
+      alert(`You've entered an invalid name or number`);
     } else if (persons.map(({ name }) => name).includes(newName)) {
       alert(`${newName} is already added to phonebook`);
     } else {
@@ -70,6 +74,7 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
+
       setPersons(persons.concat(newPerson));
       setNewName("");
       setNewNumber("");
