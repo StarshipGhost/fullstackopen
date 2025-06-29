@@ -52,12 +52,10 @@ const App = () => {
   const initialPersons = [];
   const [persons, setPersons] = useState(initialPersons);
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
+    axios.get('http://localhost:3001/persons').then((response) => {
       setPersons(initialPersons.concat(response.data));
     });
   }, []);
-
-  console.log(initialPersons);
 
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
