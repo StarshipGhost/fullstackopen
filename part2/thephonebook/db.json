@@ -1,29 +1,19 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": "1"
-    },
-    {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": "2"
-    },
-    {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": "3"
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": "4"
-    },
-    {
-      "id": "3cf6",
+      "id": "44bc",
       "name": "Saad Kalyati",
       "number": "438-229-6003"
+    },
+    {
+      "id": "dcf5",
+      "name": "Hassina Azri",
+      "number": "438-730-6922"
+    },
+    {
+      "id": "5f7c",
+      "name": "Jalal Kalyati",
+      "number": "438-275-8987"
     }
   ]
 }

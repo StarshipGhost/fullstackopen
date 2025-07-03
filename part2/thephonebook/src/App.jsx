@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 import personsService from "./services/persons";
 
+const initialPersons = [];
+
 const Filter = ({ value, onChange }) => {
   return (
     <div>
@@ -35,24 +37,19 @@ const PersonForm = ({
   );
 };
 
-const Persons = ({ persons }) => {
+const Person = ({ name, number, deletePersonFunction }) => {
   return (
     <div>
-      <h2>Numbers</h2>
-      {persons.map(({ name, number }) => (
-        <div key={name}>
-          {name} {number}
-        </div>
-      ))}
+      {name} {number}
+      <button onClick={deletePersonFunction}>delete</button>
     </div>
   );
 };
 
 const App = () => {
-  const initialPersons = [];
   const [persons, setPersons] = useState(initialPersons);
   useEffect(() => {
-    personsService.getAll().then((persons) => {
+    personsService.getAllPerson().then((persons) => {
       setPersons(initialPersons.concat(persons));
     });
   }, []);
@@ -72,12 +69,19 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-      personsService.create(newPerson).then((person) => {
+      setPersons(persons.concat(newPerson));
+      personsService.createPerson(newPerson).then((person) => {
         setPersons(persons.concat(person));
       });
       setNewName("");
       setNewNumber("");
     }
+  };
+
+  const deletePerson = (persons, idPerson) => {
+    personsService
+      .deletePerson(idPerson)
+      .then(setPersons(persons.filter(({ id }) => id !== idPerson)));
   };
 
   const handleNameChange = (event) => {
@@ -107,7 +111,15 @@ const App = () => {
         numberValue={newNumber}
         onNumberChange={handleNumberChange}
       />
-      <Persons persons={filteredPersons} />
+      <h2>Numbers</h2>
+      {filteredPersons.map(({ name, number, id }) => (
+        <Person
+          key={id}
+          name={name}
+          number={number}
+          deletePersonFunction={() => deletePerson(filteredPersons, id)}
+        />
+      ))}
     </div>
   );
 };
