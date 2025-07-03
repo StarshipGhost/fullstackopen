@@ -4,13 +4,16 @@ import personsService from "./services/persons";
 import "./index.css";
 
 const initialPersons = [];
-
-const Notification = ({ message }) => {
+const Notification = ({ message, isSuccess }) => {
   if (message === null) {
     return null;
   }
 
-  return <div className="notification">{message}</div>;
+  return (
+    <div className={isSuccess ? "notification success" : "notification error"}>
+      {message}
+    </div>
+  );
 };
 
 const Filter = ({ value, onChange }) => {
@@ -67,6 +70,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [query, setQuery] = useState("");
   const [notification, setNotification] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(null);
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -85,17 +89,27 @@ const App = () => {
           const updatedPerson = { ...person, number: newNumber };
           personsService
             .updatePerson(updatedPerson.id, updatedPerson)
-            .then(
+            .then(() => {
               setPersons(
                 persons.map((person) =>
                   person.id === updatedPerson.id ? updatedPerson : person
                 )
-              )
-            )
-            .finally(() => {
+              );
+            })
+            .then(() => {
+              setIsSuccess(true);
               setNotification(`Added ${newName}`);
               setTimeout(() => setNotification(null), 5000);
+            })
+            .catch(() => {
+              setIsSuccess(false);
+              setNotification(
+                `Information of ${newName} has already been removed from server`
+              );
+              setTimeout(() => setNotification(null), 5000);
             });
+          setNewName("");
+          setNewNumber("");
         }
       }
     } else {
@@ -103,14 +117,14 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-      setPersons(persons.concat(newPerson));
       personsService
         .createPerson(newPerson)
         .then((person) => {
           setPersons(persons.concat(person));
+          setIsSuccess(true);
+          setNotification(`Added ${newName}`);
         })
         .finally(() => {
-          setNotification(`Added ${newName}`);
           setTimeout(() => setNotification(null), 5000);
         });
       setNewName("");
@@ -118,10 +132,12 @@ const App = () => {
     }
   };
 
-  const deletePerson = (persons, idPerson) => {
+  const deletePerson = (idPerson) => {
     personsService
       .deletePerson(idPerson)
-      .then(setPersons(persons.filter(({ id }) => id !== idPerson)));
+      .then(
+        setPersons((persons) => persons.filter(({ id }) => id !== idPerson))
+      );
   };
 
   const handleNameChange = (event) => {
@@ -143,7 +159,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={notification} />
+      <Notification message={notification} isSuccess={isSuccess} />
       <Filter value={query} onChange={handleFilterChange}></Filter>
       <PersonForm
         addPersonFunction={addPerson}
@@ -158,7 +174,7 @@ const App = () => {
           key={id}
           name={name}
           number={number}
-          deletePersonFunction={() => deletePerson(filteredPersons, id)}
+          deletePersonFunction={() => deletePerson(id)}
         />
       ))}
     </div>

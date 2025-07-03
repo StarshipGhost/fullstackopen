@@ -1,9 +1,19 @@
 .notification {
-    color: green;
     font-Size: 1.25rem;
     background-color: lightgray;
     border-radius: 0.25rem;
-    border: solid green;
     padding: 1rem;
     margin: 1rem 0.25rem;
 }
+
+.error {
+    color: red;
+    border: solid red;
+    
+}
+
+.success {
+    color: green;
+    border: solid green;
+}
+
