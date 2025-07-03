@@ -63,7 +63,23 @@ const App = () => {
     if (newName.length === 0) {
       alert(`You've entered an invalid name or number`);
     } else if (persons.map(({ name }) => name).includes(newName)) {
-      alert(`${newName} is already added to phonebook`);
+      if (persons.map(({ number }) => number).includes(newNumber)) {
+        alert(`${newName} is already added to phonebook`);
+      } else {
+        if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+          const person = persons.find(({ name }) => name === newName);
+          const updatedPerson = { ...person, number: newNumber };
+          personsService
+            .updatePerson(updatedPerson.id, updatedPerson)
+            .then(
+              setPersons(
+                persons.map((person) =>
+                  person.id === updatedPerson.id ? updatedPerson : person
+                )
+              )
+            );
+        }
+      }
     } else {
       const newPerson = {
         name: newName,
