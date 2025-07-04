@@ -34,12 +34,14 @@ const PersonForm = ({
   return (
     <div>
       <h2>add a new</h2>
-      <form onSubmit={addPersonFunction}>
-        <div>
-          name: <input value={nameValue} onChange={onNameChange} />
+      <form onSubmit={addPersonFunction} className="person-form">
+        <div className="person-form">
+          <label for="name">name:</label>
+          <input id="name" value={nameValue} onChange={onNameChange} />
         </div>
-        <div>
-          number: <input value={numberValue} onChange={onNumberChange} />
+        <div className="person-form">
+          <label for="number">number:</label>
+          <input id="number" value={numberValue} onChange={onNumberChange} />
         </div>
         <div>
           <button type="submit">add</button>
@@ -51,9 +53,10 @@ const PersonForm = ({
 
 const Person = ({ name, number, deletePersonFunction }) => {
   return (
-    <div>
-      {name} {number}
-      <button onClick={deletePersonFunction}>delete</button>
+    <div className="person-item">
+      <span className="person-name">{name}</span>
+      <span className="person-number">{number}</span>
+      <button className="person-button" onClick={deletePersonFunction}>delete</button>
     </div>
   );
 };
@@ -169,6 +172,7 @@ const App = () => {
         onNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
+      <div className="persons">
       {filteredPersons.map(({ name, number, id }) => (
         <Person
           key={id}
@@ -177,6 +181,7 @@ const App = () => {
           deletePersonFunction={() => deletePerson(id)}
         />
       ))}
+      </div>
     </div>
   );
 };
