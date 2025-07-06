@@ -1,0 +1,10 @@
+.country-form {
+  display: table;
+}
+
+.form-label, .form-input {
+  display: table-cell;
+  padding-right: 0.5rem;
+}
+
+
