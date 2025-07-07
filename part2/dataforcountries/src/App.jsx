@@ -3,16 +3,24 @@ import { useEffect } from "react";
 import countriesService from "./services/countries.js";
 
 const initialPerson = [];
-const Filter = ({ handleInputChange }) => {
+const Filter = ({ handleInputChange, value }) => {
   return (
     <div className="country-form">
       <label className="form-label">find countries</label>
-      <input className="form-input" onChange={handleInputChange}></input>
+      <input
+        className="form-input"
+        value={value}
+        onChange={handleInputChange}
+      ></input>
     </div>
   );
 };
 
-const Countries = ({ countries }) => {
+const Countries = ({ countries, changeQuery }) => {
+  const handleClick = (name) => {
+    return changeQuery(name);
+  };
+
   if (countries.length > 10) {
     return <div>Too many matches, specify another filter</div>;
   } else if (countries.length === 1) {
@@ -20,9 +28,17 @@ const Countries = ({ countries }) => {
     return <Country country={country} />;
   } else {
     return (
-      <div>
+      <div className="country-suggestions">
         {countries.map(({ name: { common } }) => (
-          <div>{common}</div>
+          <div key={common} className="country-item">
+            <span className="country-name">{common}</span>
+            <button
+              className="country-button"
+              onClick={() => handleClick(common)}
+            >
+              show
+            </button>
+          </div>
         ))}
       </div>
     );
@@ -64,10 +80,14 @@ function App() {
     setQuery(event.target.value);
   };
 
+  const showCountry = (name) => {
+    setQuery(name);
+  };
+
   return (
     <div>
-      <Filter handleInputChange={handleQueryChange} />
-      <Countries countries={filteredCountries} />
+      <Filter handleInputChange={handleQueryChange} value={query} />
+      <Countries countries={filteredCountries} changeQuery={showCountry} />
     </div>
   );
 }

@@ -8,3 +8,23 @@
 }
 
 
+.country-suggestions {
+  display: table;
+  margin-top: 1rem;
+}
+
+.country-item {
+  display: table-row;
+}
+
+.country-name, .country-button {
+  display: table-cell;
+  padding-right: 3.25rem;
+}
+
+.country-button {
+    width: 4rem;
+    height: 1.5rem;
+    padding: 0;
+    vertical-align: middle;
+}
