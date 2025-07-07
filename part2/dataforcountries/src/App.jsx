@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import axios from "axios";
 import countriesService from "./services/countries.js";
 
 const initialPerson = [];
@@ -50,7 +51,7 @@ const Country = ({ country }) => {
     <div>
       <h1>{country.name.common}</h1>
       <div>Capital {country.capital}</div>
-      <div>Area {country.area}</div>
+      <div>Area {country.area} square miles</div>
       <h2>Languages</h2>
       <ul>
         {Object.entries(country.languages).map(([code, language]) => (
@@ -58,6 +59,40 @@ const Country = ({ country }) => {
         ))}
       </ul>
       <img src={country.flags.png}></img>
+      <CountryWeather
+        capital={country.capital}
+        lat={country.latlng[0]}
+        lng={country.latlng[1]}
+        apiKey={import.meta.env.VITE_KEY}
+      />
+    </div>
+  );
+};
+
+const CountryWeather = ({ capital, lat, lng, apiKey }) => {
+  const [temperature, setTemperature] = useState(0);
+  const [wind, setWind] = useState(0);
+  const [iconCode, setIconCode] = useState("");
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lng}&appid=${apiKey}`
+      )
+      .then((response) => response.data)
+      .then((data) => {
+        setTemperature(data.current.temp);
+        setWind(data.current.wind_speed);
+        setIconCode(data.current.weather[0].icon);
+      });
+  });
+
+  return (
+    <div>
+      <h2>Weather in {capital}</h2>
+      <p>Temperature {Math.floor(temperature - 273)} °C</p>
+      <img src={`https://openweathermap.org/img/wn/${iconCode}@2x.png`}></img>
+      <p>Wind {wind} m/s</p>
     </div>
   );
 };
