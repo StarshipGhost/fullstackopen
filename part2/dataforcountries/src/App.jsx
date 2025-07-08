@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import countriesService from "./services/countries.js";
 
-const initialPerson = [];
+const initialCountries = [];
 const Filter = ({ handleInputChange, value }) => {
   return (
     <div className="country-form">
@@ -58,7 +58,7 @@ const Country = ({ country }) => {
           <li key={code}>{language}</li>
         ))}
       </ul>
-      <img src={country.flags.png}></img>
+      <img src={country.flags.png} alt={`Flag of ${country.name.common}`}></img>
       <CountryWeather
         capital={country.capital}
         lat={country.latlng[0]}
@@ -77,7 +77,7 @@ const CountryWeather = ({ capital, lat, lng, apiKey }) => {
   useEffect(() => {
     axios
       .get(
-        `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lng}&appid=${apiKey}`
+        `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lng}&appid=${apiKey}&units=metric`
       )
       .then((response) => response.data)
       .then((data) => {
@@ -85,26 +85,29 @@ const CountryWeather = ({ capital, lat, lng, apiKey }) => {
         setWind(data.current.wind_speed);
         setIconCode(data.current.weather[0].icon);
       });
-  });
+  }, [lat, lng, apiKey]);
 
   return (
     <div>
       <h2>Weather in {capital}</h2>
-      <p>Temperature {Math.floor(temperature - 273)} °C</p>
-      <img src={`https://openweathermap.org/img/wn/${iconCode}@2x.png`}></img>
+      <p>Temperature {Math.round(temperature)} °C</p>
+      <img
+        src={`https://openweathermap.org/img/wn/${iconCode}@2x.png`}
+        alt={"Weather icon"}
+      ></img>
       <p>Wind {wind} m/s</p>
     </div>
   );
 };
 
 function App() {
-  const [countries, setCountries] = useState(initialPerson);
+  const [countries, setCountries] = useState(initialCountries);
   const [query, setQuery] = useState("");
 
   useEffect(() => {
     countriesService
       .getAllCountries()
-      .then((country) => setCountries(countries.concat(country)));
+      .then((fetchedCountries) => setCountries(fetchedCountries));
   }, []);
 
   const filteredCountries = countries.filter(({ name: { common } }) =>
